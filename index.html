@@ -128,21 +128,24 @@
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
   import { getFirestore, doc, updateDoc, increment, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js';
   import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js';
+  import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js';
 
   // Colle ton firebaseConfig ici (de l'étape 3)
   const firebaseConfig = {
-     apiKey: "AIzaSyAcxVNsIt4YsrrvhfyQWvZypHym0Cv3z8A",
+    apiKey: "AIzaSyAcxVNsIt4YsrrvhfyQWvZypHym0Cv3z8A",
     authDomain: "marche-pour-jesus.firebaseapp.com",
     projectId: "marche-pour-jesus",
     storageBucket: "marche-pour-jesus.firebasestorage.app",
     messagingSenderId: "915519833949",
     appId: "1:915519833949:web:c3f2cddd593a37bf31cab4",
-    measurementId: "G-CWM522GSPR" };
+    measurementId: "G-CWM522GSPR"
+  };
 
   // Initialisation
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
+  const messaging = getMessaging(app); // Initialisation de Messaging
 
   // Variables globales
   let hasClicked = localStorage.getItem('hasClickedThisSession') || false;
@@ -157,6 +160,12 @@
     if (docSnap.exists()) {
       const count = docSnap.data().count || 0;
       document.getElementById('compteur-participants').innerHTML = count + ' participant' + (count !== 1 ? 's' : '') + ' inscrit' + (count !== 1 ? 's' : '') + ' ! Rejoignez-nous !';
+
+      // Vérifie les milestones pour envoyer une notification (si backend configuré)
+      if ([50, 100, 200].includes(count)) {
+        // Placeholder : Remplace par un appel backend si tu as une Firebase Function
+        console.log(`Milestone atteint : ${count} participants !`);
+      }
     }
   });
 
@@ -164,10 +173,16 @@
   window.incrementParticipant = function() {
     if (!hasClicked) {
       updateDoc(counterRef, { count: increment(1) })
-        .then(() => {
+        .then(async () => {
+          const newCount = (await getDoc(counterRef)).data().count;
           localStorage.setItem('hasClickedThisSession', 'true');
           hasClicked = true;
           alert('Merci de votre inscription ! Un seul clic par session est autorisé.');
+
+          // Vérifie milestone et log (backend requis pour push)
+          if ([50, 100, 200].includes(newCount)) {
+            console.log(`Milestone ${newCount} atteint ! Push non envoyé (backend requis).`);
+          }
         })
         .catch((error) => {
           console.error('Erreur incrément:', error);
@@ -183,8 +198,31 @@
     localStorage.removeItem('hasClickedThisSession');
     if (unsubscribe) unsubscribe();
   };
-</script>
 
+  // Gestion des notifications push
+  async function requestNotificationPermission() {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      try {
+        const token = await getToken(messaging, { vapidKey: 'BHArO-ii_W5psbUcW5QDw9QxBTYQ7aaYvfWpsI7Oe4CmxzNVmsmPoEGPi9q1dWzlQeTVV5jm4MPYuhwdZy59WRE' });
+        console.log('Token de notification:', token);
+        // Ici, tu devrais envoyer ce token à ton backend pour stocker les abonnés
+      } catch (error) {
+        console.error('Erreur lors de la récupération du token:', error);
+      }
+    }
+  }
+
+  // Écoute des messages push en temps réel
+  onMessage(messaging, (payload) => {
+    new Notification(payload.notification.title, { body: payload.notification.body });
+  });
+
+  // Demande la permission au chargement de la page
+  if ('Notification' in window && Notification.permission === 'default') {
+    requestNotificationPermission();
+  }
+</script>
 
 </head>
 <body>
