@@ -198,30 +198,36 @@
     localStorage.removeItem('hasClickedThisSession');
     if (unsubscribe) unsubscribe();
   };
-
-  // Gestion des notifications push
-  async function requestNotificationPermission() {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      try {
-        const token = await getToken(messaging, { vapidKey: 'BHArO-ii_W5psbUcW5QDw9QxBTYQ7aaYvfWpsI7Oe4CmxzNVmsmPoEGPi9q1dWzlQeTVV5jm4MPYuhwdZy59WRE' });
-        console.log('Token de notification:', token);
-        // Ici, tu devrais envoyer ce token à ton backend pour stocker les abonnés
-      } catch (error) {
-        console.error('Erreur lors de la récupération du token:', error);
-      }
+// Gestion des notifications push
+async function requestNotificationPermission() {
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    try {
+      const token = await getToken(messaging, { vapidKey: 'BHArO-ii_W5psbUcW5QDw9QxBTYQ7aaYvfWpsI7Oe4CmxzNVmsmPoEGPi9q1dWzlQeTVV5jm4MPYuhwdZy59WRE' });
+      console.log('Token de notification:', token);
+      // Stocke le token dans Firestore (collection subscribers)
+      const subscriberRef = doc(db, 'subscribers', token); // ID = token
+      await setDoc(subscriberRef, {
+        token: token,
+        subscribedAt: new Date()
+      });
+      console.log('Token stocké avec succès !');
+    } catch (error) {
+      console.error('Erreur lors de la récupération ou du stockage du token:', error);
     }
   }
+}
 
-  // Écoute des messages push en temps réel
-  onMessage(messaging, (payload) => {
-    new Notification(payload.notification.title, { body: payload.notification.body });
-  });
+// Écoute des messages push en temps réel
+onMessage(messaging, (payload) => {
+  new Notification(payload.notification.title, { body: payload.notification.body });
+});
 
-  // Demande la permission au chargement de la page
-  if ('Notification' in window && Notification.permission === 'default') {
-    requestNotificationPermission();
-  }
+// Demande la permission au chargement de la page
+if ('Notification' in window && Notification.permission === 'default') {
+  requestNotificationPermission();
+}
+
 </script>
 
 </head>
