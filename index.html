@@ -118,13 +118,18 @@
                 <div class="countdown" id="countdown"></div>
             </div>
         </section>
-
-        <section class="qr-section">
-            <h2>Confirmez votre présence</h2>
-            <p>Scannez ce QR code pour vous inscrire et recevoir des mises à jour. Le même code est sur nos affiches locales.</p>
-            <div class="qr-code">QR Code Placeholder<br>(Générez via QRCode Monkey : lien vers formulaire d'inscription)</div>
-            <a href="https://forms.gle/placeholder-form" target="_blank" style="background: #DC143C; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">S'inscrire maintenant</a>
-        </section>
+<section class="qr-section">
+    <h2>Confirmez votre présence</h2>
+    <p>Scannez le QR code sur une affiche ou cliquez ici pour rejoindre la marche !</p>
+    <div class="qr-code" onclick="incrementParticipant()" style="cursor: pointer;">
+        <img src="/images/qr-marche-jesus.png" alt="QR Code Marche pour Jésus" width="200" height="200">
+        <p>(Cliquez ou scannez pour vous inscrire)</p>
+    </div>
+    <div id="compteur-participants" class="countdown" style="text-align: center; font-size: 1.5em; color: #DC143C;">
+        Chargement...
+    </div>
+</section>
+        
 
         <section class="itinerary">
             <h2>Itinéraire de la Marche Silencieuse</h2>
