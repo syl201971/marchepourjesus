@@ -36,6 +36,69 @@
             h1 { font-size: 3em; }
         }
     </style>
+<script type="module">
+  // Import du SDK Firebase (version modulaire)
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
+  import { getFirestore, doc, updateDoc, increment, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js';
+  import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js';
+
+  // Colle ton firebaseConfig ici (de l'étape 3)
+  const firebaseConfig = {
+     apiKey: "AIzaSyAcxVNsIt4YsrrvhfyQWvZypHym0Cv3z8A",
+    authDomain: "marche-pour-jesus.firebaseapp.com",
+    projectId: "marche-pour-jesus",
+    storageBucket: "marche-pour-jesus.firebasestorage.app",
+    messagingSenderId: "915519833949",
+    appId: "1:915519833949:web:c3f2cddd593a37bf31cab4",
+    measurementId: "G-CWM522GSPR" };
+
+  // Initialisation
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  // Variables globales
+  let hasClicked = localStorage.getItem('hasClickedThisSession') || false;
+  let unsubscribe; // Pour le listener en temps réel
+
+  // Fonction d'authentification anonyme
+  signInAnonymously(auth).catch((error) => console.error('Erreur auth:', error));
+
+  // Écoute en temps réel du compteur
+  const counterRef = doc(db, 'counters', 'participants');
+  unsubscribe = onSnapshot(counterRef, (docSnap) => {
+    if (docSnap.exists()) {
+      const count = docSnap.data().count || 0;
+      document.getElementById('compteur-participants').innerHTML = count + ' participant' + (count !== 1 ? 's' : '') + ' inscrit' + (count !== 1 ? 's' : '') + ' ! Rejoignez-nous !';
+    }
+  });
+
+  // Fonction pour incrémenter
+  window.incrementParticipant = function() {
+    if (!hasClicked) {
+      updateDoc(counterRef, { count: increment(1) })
+        .then(() => {
+          localStorage.setItem('hasClickedThisSession', 'true');
+          hasClicked = true;
+          alert('Merci de votre inscription ! Un seul clic par session est autorisé.');
+        })
+        .catch((error) => {
+          console.error('Erreur incrément:', error);
+          alert('Erreur : Réessayez plus tard.');
+        });
+    } else {
+      alert('Vous avez déjà cliqué dans cette session. Rejoignez-nous le 15 novembre !');
+    }
+  };
+
+  // Réinitialisation à la fermeture
+  window.onbeforeunload = function() {
+    localStorage.removeItem('hasClickedThisSession');
+    if (unsubscribe) unsubscribe();
+  };
+</script>
+
+
 </head>
 <body>
     <header>
