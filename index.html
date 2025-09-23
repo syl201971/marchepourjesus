@@ -5,37 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marche Chrétienne pour Jésus - Baie-Comeau 2025</title>
     <meta name="description" content="Unissez-vous pour une marche silencieuse en prière pour Jésus à Baie-Comeau le 15 novembre 2025. De Tadoussac à Havre-Saint-Pierre, rejoignez-nous !">
-    <style>
-        /* Styles généraux */
-        body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { background: linear-gradient(to right, #8B0000, #DC143C); color: white; text-align: center; padding: 20px; }
-        h1 { margin: 0; font-size: 2.5em; }
-        .hero { text-align: center; padding: 40px 20px; background: #fff; }
-        .hero img { max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .event-details { background: #e9ecef; padding: 20px; border-radius: 10px; margin: 20px 0; }
-        .qr-section { text-align: center; margin: 40px 0; }
-        .qr-code { width: 200px; height: 200px; background: #ddd; border: 2px dashed #ccc; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 0.8em; color: #666; }
-        .itinerary { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .map { height: 400px; margin: 20px 0; border-radius: 10px; overflow: hidden; }
-        footer { background: #333; color: white; text-align: center; padding: 20px; }
-        .countdown { font-size: 1.5em; color: #DC143C; font-weight: bold; }
-        
-        /* Responsive : Mobile */
-        @media (max-width: 768px) {
-            h1 { font-size: 2em; }
-            .hero { padding: 20px 10px; }
-            .event-details { padding: 15px; }
-            .map { height: 300px; }
-            .qr-code { width: 150px; height: 150px; font-size: 0.7em; }
+  <style>
+    /* Styles généraux */
+    body { 
+        font-family: 'Arial', sans-serif; 
+        margin: 0; 
+        padding: 0; 
+        background-color: #f4f4f4; 
+        color: #333; 
+        line-height: 1.6; 
+        overflow-x: hidden; /* Empêche le défilement horizontal global */
+    }
+    .container { 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        padding: 20px; 
+        width: 100%; /* Assure une largeur fluide */
+        box-sizing: border-box; /* Inclut padding dans la largeur */
+    }
+    header { 
+        background: linear-gradient(to right, #8B0000, #DC143C); 
+        color: white; 
+        text-align: center; 
+        padding: 20px; 
+    }
+    h1 { margin: 0; font-size: 2.5em; }
+    .hero { 
+        text-align: center; 
+        padding: 40px 20px; 
+        background: #fff; 
+    }
+    .hero img { 
+        max-width: 100%; 
+        height: auto; 
+        border-radius: 10px; 
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    }
+    .event-details { 
+        background: #e9ecef; 
+        padding: 20px; 
+        border-radius: 10px; 
+        margin: 20px 0; 
+    }
+    .qr-section { 
+        text-align: center; 
+        margin: 40px 0; 
+    }
+    .qr-code { 
+        width: 200px; 
+        height: 200px; 
+        background: #ddd; 
+        border: 2px dashed #ccc; 
+        margin: 0 auto 20px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 0.8em; 
+        color: #666; 
+    }
+    .itinerary { 
+        background: #fff; 
+        padding: 20px; 
+        border-radius: 10px; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        width: 100%; 
+        box-sizing: border-box; 
+    }
+    .map { 
+        height: 400px; 
+        margin: 20px 0; 
+        border-radius: 10px; 
+        overflow: hidden; 
+        width: 100%; 
+        max-width: 100%; /* Limite la largeur maximale */
+        box-sizing: border-box; /* Inclut bordures/padding */
+    }
+    footer { 
+        background: #333; 
+        color: white; 
+        text-align: center; 
+        padding: 20px; 
+    }
+    .countdown { 
+        font-size: 1.5em; 
+        color: #DC143C; 
+        font-weight: bold; 
+    }
+    
+    /* Responsive : Mobile */
+    @media (max-width: 768px) {
+        h1 { font-size: 2em; }
+        .hero { padding: 20px 10px; }
+        .event-details { padding: 15px; }
+        .map { 
+            height: 250px; /* Réduit encore pour petits écrans */
+            max-width: 100% !important; /* Force la limite */
+            overflow-x: hidden; /* Empêche défilement horizontal */
         }
-        
-        /* Desktop */
-        @media (min-width: 769px) {
-            .container { padding: 40px; }
-            h1 { font-size: 3em; }
+        .itinerary { 
+            padding: 10px; 
+            overflow-x: hidden; /* Contient l'iframe */
         }
-    </style>
+        .qr-code { 
+            width: 150px; 
+            height: 150px; 
+            font-size: 0.7em; 
+        }
+        .container { 
+            padding: 10px; /* Réduit les marges */
+        }
+    }
+    
+    /* Desktop */
+    @media (min-width: 769px) {
+        .container { padding: 40px; }
+        h1 { font-size: 3em; }
+        .map { height: 450px; } /* Légère augmentation pour desktop */
+    }
+</style>
 <script type="module">
   // Import du SDK Firebase (version modulaire)
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
